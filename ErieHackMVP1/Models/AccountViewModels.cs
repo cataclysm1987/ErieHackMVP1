@@ -79,6 +79,10 @@ namespace ErieHackMVP1.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [Display(Name = "County of Residence")]
+        public string County { get; set; }
     }
 
     public class ResetPasswordViewModel

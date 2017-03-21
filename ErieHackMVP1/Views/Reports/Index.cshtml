@@ -1,0 +1,70 @@
+﻿@model IEnumerable<ErieHackMVP1.Models.Report>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ReportName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReportDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Source)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Problem)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReportCounty)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TimeSubmitted)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TimeObserved)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReportName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReportDescription)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Source)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Problem)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReportCounty)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TimeSubmitted)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TimeObserved)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ReportId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ReportId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ReportId })
+        </td>
+    </tr>
+}
+
+</table>

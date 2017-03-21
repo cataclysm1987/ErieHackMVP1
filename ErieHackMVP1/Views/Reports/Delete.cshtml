@@ -1,0 +1,81 @@
+﻿@model ErieHackMVP1.Models.Report
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Report</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ReportName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReportName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReportDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReportDescription)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Source)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Source)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Problem)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Problem)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReportCounty)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReportCounty)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TimeSubmitted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TimeSubmitted)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TimeObserved)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TimeObserved)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>
