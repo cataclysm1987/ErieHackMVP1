@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using FluentScheduler;
 
 namespace ErieHackMVP1
 {
@@ -15,7 +16,8 @@ namespace ErieHackMVP1
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);   
+            JobManager.Initialize(new ReportsController.MyRegistry());
         }
     }
 }

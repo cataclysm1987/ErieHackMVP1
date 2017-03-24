@@ -9,12 +9,24 @@ using System.Web;
 using System.Web.Mvc;
 using ErieHackMVP1.Models;
 using Microsoft.AspNet.Identity;
+using FluentScheduler;
 
 namespace ErieHackMVP1
 {
     public class ReportsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+
+        public class MyRegistry : Registry
+        {
+            public MyRegistry()
+            {
+                Schedule<DailyAlert>().ToRunEvery(1).Days();
+                Schedule<TestAlert>().ToRunEvery(20).Seconds();
+            }
+        }
+
+        
 
         // GET: Reports
         public async Task<ActionResult> Index()
@@ -130,5 +142,28 @@ namespace ErieHackMVP1
             }
             base.Dispose(disposing);
         }
+
+        public class TestAlert : IJob
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            public void Execute()
+            {
+                
+
+            }
+        }
+
+        internal class DailyAlert : IJob
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            public void Execute()
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
+
 }
+
+   
+
