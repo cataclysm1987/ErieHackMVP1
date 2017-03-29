@@ -225,6 +225,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\SendMailController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -232,9 +233,18 @@
     <Compile Include="Migrations\201703201923434_initialmodel.Designer.cs">
       <DependentUpon>201703201923434_initialmodel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703291403466_addcarriers.cs" />
+    <Compile Include="Migrations\201703291403466_addcarriers.Designer.cs">
+      <DependentUpon>201703291403466_addcarriers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703291425219_SMSroute.cs" />
+    <Compile Include="Migrations\201703291425219_SMSroute.Designer.cs">
+      <DependentUpon>201703291425219_SMSroute.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Mail.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Report.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -304,6 +314,7 @@
     <Content Include="Views\Reports\Details.cshtml" />
     <Content Include="Views\Reports\Edit.cshtml" />
     <Content Include="Views\Reports\Index.cshtml" />
+    <Content Include="Views\SendMail\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -319,6 +330,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201703201923434_initialmodel.resx">
       <DependentUpon>201703201923434_initialmodel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703291403466_addcarriers.resx">
+      <DependentUpon>201703291403466_addcarriers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703291425219_SMSroute.resx">
+      <DependentUpon>201703291425219_SMSroute.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

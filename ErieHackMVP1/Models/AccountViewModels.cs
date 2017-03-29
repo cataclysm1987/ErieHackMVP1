@@ -83,6 +83,16 @@ namespace ErieHackMVP1.Models
         [Required]
         [Display(Name = "County of Residence")]
         public string County { get; set; }
+
+        [Required]
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Phone Number")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Not a valid Phone number")]
+        public string PhoneNumber { get; set; }
+
+        [Required]
+        [Display(Name = "Mobile Carrier")]
+        public Carriers Carrier { get; set; }
     }
 
     public class ResetPasswordViewModel

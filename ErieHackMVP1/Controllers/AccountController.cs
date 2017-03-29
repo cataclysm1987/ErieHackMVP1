@@ -151,7 +151,8 @@ namespace ErieHackMVP1.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, County = model.County };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, County = model.County, Carrier = model.Carrier, PhoneNumber = model.PhoneNumber};
+                user.SMSRoute = DetermineSMSRoute(user);
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -421,6 +422,34 @@ namespace ErieHackMVP1.Controllers
             }
 
             base.Dispose(disposing);
+        }
+
+        private static string DetermineSMSRoute(ApplicationUser user)
+        {
+            string smsemail = null;
+            if (user.Carrier == Carriers.ATT)
+                smsemail = "@txt.att.net";
+            else if (user.Carrier == Carriers.Alltel)
+                smsemail = "@text.wireless.alltel.com";
+            else if (user.Carrier == Carriers.Boost)
+                smsemail = "@myboostmobile.com";
+            else if (user.Carrier == Carriers.Cricket)
+                smsemail = "@sms.mycricket.com";
+            else if (user.Carrier == Carriers.MetroPCS)
+                smsemail = "@mymetropcs.com";
+            else if (user.Carrier == Carriers.Sprint)
+                smsemail = "@messaging.sprintpcs.com";
+            else if (user.Carrier == Carriers.Nextel)
+                smsemail = "@page.nextel.com";
+            else if (user.Carrier == Carriers.StraightTalk || user.Carrier == Carriers.Verizon)
+                smsemail = "@vtext.com";
+            else if (user.Carrier == Carriers.TMobile)
+                smsemail = "@tmomail.net";
+            else if (user.Carrier == Carriers.USCellular)
+                smsemail = "@email.uscc.net";
+            else if (user.Carrier == Carriers.VirginMobile)
+                smsemail = "@vmobl.com";
+            return user.PhoneNumber + smsemail;
         }
 
         #region Helpers

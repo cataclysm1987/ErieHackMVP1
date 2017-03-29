@@ -1,0 +1,23 @@
+﻿@model  ErieHackMVP1.Models.Mail
+@{
+    ViewBag.Title = "Send Mail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+<fieldset>
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary()
+    <p>From: </p>
+    <p>@Html.TextBoxFor(m => m.From)</p>
+    <p>To: </p>
+    <p>@Html.TextBoxFor(m => m.To)</p>
+    <p>Subject: </p>
+    <p>@Html.TextBoxFor(m => m.Subject)</p>
+    <p>Body: </p>
+    <p>@Html.TextAreaFor(m => m.Body)</p>
+    <input type="submit" value="Send" />
+}  
+</fieldset>
+

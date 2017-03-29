@@ -158,8 +158,51 @@ namespace ErieHackMVP1
             ApplicationDbContext db = new ApplicationDbContext();
             public void Execute()
             {
-                throw new NotImplementedException();
+                var reports = new List<Report>(db.Reports.Where(u => u.TimeSubmitted >= DateTime.Now.AddDays(-2)));
+                reports.GroupBy(u => u.ReportCounty);
+                var counties = db.Reports.Select(u => u.ReportCounty).Distinct();
+                foreach (var county in counties)
+                {
+                    if (reports.Count(u => u.ReportCounty == county) >= 5)
+                    {
+                        
+                        var countyreports = reports.Where(u => u.ReportCounty == county);
+                        //Count the number of sources affected. If any source is above 5, begin generating report.
+                        var lake = countyreports.Count(u => u.Source == SourceAffected.Lake);
+                        var reservoir = countyreports.Count(u => u.Source == SourceAffected.Reservoir);
+                        var tapwater = countyreports.Count(u => u.Source == SourceAffected.TapWater);
+                        var well = countyreports.Count(u => u.Source == SourceAffected.Well);
+                        var river = countyreports.Count(u => u.Source == SourceAffected.River);
+                        if (river >= 5)
+                        {
+                             SubmitAlert(county, "river");
+                        }
+                        if (well >= 5)
+                        {
+                            SubmitAlert(county, "well");
+                        }
+                        if (tapwater >= 5)
+                        {
+                            SubmitAlert(county, "tap water");
+                        }
+                        if (reservoir >= 5)
+                        {
+                            SubmitAlert(county, "reservoir");
+                        }
+                        if (lake >= 5)
+                        {
+                            SubmitAlert(county, "lake");
+                        }
+                    }
+                }
             }
+        }
+
+
+        public static void SubmitAlert(string county, string source)
+        {
+            var alertmessage = "Alert. There have been issues affecting your " + source + " in " +
+                                county + ". Please check WaterAlerts.com for more details.";
         }
     }
 
