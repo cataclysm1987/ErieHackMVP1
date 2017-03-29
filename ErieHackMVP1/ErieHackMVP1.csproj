@@ -315,6 +315,7 @@
     <Content Include="Views\Reports\Edit.cshtml" />
     <Content Include="Views\Reports\Index.cshtml" />
     <Content Include="Views\SendMail\Index.cshtml" />
+    <Content Include="Views\Reports\Wait.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

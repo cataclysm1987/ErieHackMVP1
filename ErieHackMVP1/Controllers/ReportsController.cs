@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using ErieHackMVP1.Models;
@@ -21,8 +22,7 @@ namespace ErieHackMVP1
         {
             public MyRegistry()
             {
-                Schedule<DailyAlert>().ToRunEvery(1).Days();
-                Schedule<TestAlert>().ToRunEvery(20).Seconds();
+                Schedule<DailyAlert>().ToRunEvery(1).Days().At(12, 0);
             }
         }
 
@@ -50,8 +50,15 @@ namespace ErieHackMVP1
         }
 
         // GET: Reports/Create
+        [Authorize]
         public ActionResult Create()
         {
+            var userid = User.Identity.GetUserId();
+            var recent = DateTime.Now.AddDays(-2);
+            var recentreport = db.Reports.Where(u => u.TimeSubmitted >= recent);
+            var usercount = recentreport.Count(u => u.ApplicationUser.Id == userid);
+            if (usercount > 0)
+                return RedirectToAction("Wait", "Reports");
             return View();
         }
 
@@ -143,29 +150,18 @@ namespace ErieHackMVP1
             base.Dispose(disposing);
         }
 
-        public class TestAlert : IJob
-        {
-            ApplicationDbContext db = new ApplicationDbContext();
-            public void Execute()
-            {
-                
-
-            }
-        }
-
         internal class DailyAlert : IJob
         {
             ApplicationDbContext db = new ApplicationDbContext();
             public void Execute()
             {
-                var reports = new List<Report>(db.Reports.Where(u => u.TimeSubmitted >= DateTime.Now.AddDays(-2)));
-                reports.GroupBy(u => u.ReportCounty);
+                var recent = DateTime.Now.AddDays(-2);
+                var reports = new List<Report>(db.Reports.Where(u => u.TimeSubmitted >= recent));
                 var counties = db.Reports.Select(u => u.ReportCounty).Distinct();
                 foreach (var county in counties)
                 {
                     if (reports.Count(u => u.ReportCounty == county) >= 5)
                     {
-                        
                         var countyreports = reports.Where(u => u.ReportCounty == county);
                         //Count the number of sources affected. If any source is above 5, begin generating report.
                         var lake = countyreports.Count(u => u.Source == SourceAffected.Lake);
@@ -201,8 +197,34 @@ namespace ErieHackMVP1
 
         public static void SubmitAlert(string county, string source)
         {
+            ApplicationDbContext db = new ApplicationDbContext();
             var alertmessage = "Alert. There have been issues affecting your " + source + " in " +
                                 county + ". Please check WaterAlerts.com for more details.";
+            foreach (var user in db.Users)
+            {
+                if (user.County == county)
+                {
+                    MailMessage mail = new MailMessage();
+                    mail.To.Add(user.SMSRoute);
+                    mail.From = new MailAddress("eriehackalerts@gmail.com");
+                    mail.Subject = "Water alert in " + county + " County";
+                    mail.Body = alertmessage;
+                    mail.IsBodyHtml = true;
+                    SmtpClient smtp = new SmtpClient();
+                    smtp.Host = "smtp.gmail.com";
+                    smtp.Port = 587;
+                    smtp.UseDefaultCredentials = false;
+                    smtp.Credentials = new NetworkCredential
+                    ("eriehackalerts", "Winter89!");
+                    smtp.EnableSsl = true;
+                    smtp.Send(mail);
+                }
+            }
+        }
+
+        public ViewResult Wait()
+        {
+            return View();
         }
     }
 
