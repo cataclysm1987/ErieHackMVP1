@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml.Linq;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -151,6 +153,37 @@ namespace ErieHackMVP1.Controllers
         {
             if (ModelState.IsValid)
             {
+                //Validate county entered and change syntax
+                model.County = model.County.ToLower();
+                if (model.County.Contains(" county"))
+                {
+                    int index = model.County.IndexOf(" ");
+                    if (index > 0)
+                    model.County = model.County.Substring(0, index);
+                }
+
+                model.County = char.ToUpper(model.County[0]) + model.County.Substring(1);
+
+                var countyfull = model.County + " County";
+                var requestUri =
+                  string.Format("http://maps.googleapis.com/maps/api/geocode/xml?address={0}&sensor=false",
+                      Uri.EscapeDataString(countyfull));
+
+                var request = WebRequest.Create(requestUri);
+                var response = request.GetResponse();
+                var xdoc = XDocument.Load(response.GetResponseStream());
+
+                if (xdoc.Element("GeocodeResponse").Element("status").ToString() == "ZERO_RESULTS")
+                {
+                    return RedirectToAction("CountyNotFound", "Account");
+                }
+
+                var xdocstring = xdoc.ToString().ToLower();
+                if (!xdoc.ToString().ToLower().Contains(countyfull.ToLower()))
+                {
+                    return RedirectToAction("CountyNotFound", "Account");
+                }
+
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email, County = model.County, Carrier = model.Carrier, PhoneNumber = model.PhoneNumber};
                 user.SMSRoute = DetermineSMSRoute(user);
                 var result = await UserManager.CreateAsync(user, model.Password);
@@ -510,5 +543,10 @@ namespace ErieHackMVP1.Controllers
             }
         }
         #endregion
+
+        public ActionResult CountyNotFound()
+        {
+            return View();
+        }
     }
 }
