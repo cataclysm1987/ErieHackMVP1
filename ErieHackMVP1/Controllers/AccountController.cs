@@ -175,13 +175,13 @@ namespace ErieHackMVP1.Controllers
 
                 if (xdoc.Element("GeocodeResponse").Element("status").ToString() == "ZERO_RESULTS")
                 {
-                    return RedirectToAction("CountyNotFound", "Account");
+                    return View("CountyNotFound");
                 }
 
                 var xdocstring = xdoc.ToString().ToLower();
                 if (!xdoc.ToString().ToLower().Contains(countyfull.ToLower()))
                 {
-                    return RedirectToAction("CountyNotFound", "Account");
+                    return View("CountyNotFound");
                 }
 
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email, County = model.County, Carrier = model.Carrier, PhoneNumber = model.PhoneNumber};
