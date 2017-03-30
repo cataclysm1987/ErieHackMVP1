@@ -22,3 +22,43 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.lake-bg {
+    background: linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ), url("../img/lake.jpg");
+    background-color: #17234E;
+    margin-bottom: 0;
+    height: 300px;
+    background-repeat: no-repeat;
+    background-position: center;
+    -webkit-background-size: cover;
+    background-size: cover;
+    color: #000;
+}
+
+.lake-bg p, .lake-bg h1 {
+    color: #EEEEEE;
+}
+
+.jumbotron {
+    min-height: 350px;
+}
+
+/*.btn-default {
+    background-color: #2fa4e7;
+    color: #FFFFFF;
+}*/
+
+/*MEDIA QUERIES*/
+
+@media only screen and (max-width: 364px){
+    .lake-bg h1{
+        font-size: 25px;
+    }
+
+    .lake-bg p{
+        font-size: 18px;
+    }
+}
