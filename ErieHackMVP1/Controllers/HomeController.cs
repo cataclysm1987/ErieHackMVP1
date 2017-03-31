@@ -10,20 +10,27 @@ namespace ErieHackMVP1.Controllers
     {
         public ActionResult Index()
         {
+            ViewBag.Title = "Home";
             return View();
         }
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = "About Water Alerts";
 
             return View();
         }
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
+            ViewBag.Message = "Contact Us";
 
+            return View();
+        }
+
+        public ActionResult FAQ()
+        {
+            ViewBag.Message = "Frequently Asked Questions";
             return View();
         }
     }
