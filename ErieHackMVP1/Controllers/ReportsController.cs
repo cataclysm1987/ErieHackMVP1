@@ -8,14 +8,21 @@ using System.Net;
 using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml.Linq;
 using ErieHackMVP1.Models;
 using Microsoft.AspNet.Identity;
 using FluentScheduler;
+using MvcPaging;
+using PagedList;
 
 namespace ErieHackMVP1
 {
     public class ReportsController : Controller
     {
+        private const int _defaultpagesize = 10;
+        private IList<Report> _reports = new List<Report>();
+        private readonly string[] _allcategories = new string[3] { "Shoes", "Electronics", "Food" };
+
         private ApplicationDbContext db = new ApplicationDbContext();
 
         public class MyRegistry : Registry
@@ -26,16 +33,129 @@ namespace ErieHackMVP1
             }
         }
 
-        
 
-        // GET: Reports
-        public async Task<ActionResult> Index()
+
+        public ViewResult BrowseReports(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            return View(await db.Reports.ToListAsync());
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            var reports = from s in db.Reports
+                          select s;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                reports = reports.Where(s => s.ReportDescription.Contains(searchString)
+                                       || s.ReportName.Contains(searchString)
+                                       || s.ReportCounty.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    reports = reports.OrderByDescending(s => s.ReportName);
+                    break;
+                case "Date":
+                    reports = reports.OrderBy(s => s.TimeSubmitted);
+                    break;
+                case "date_desc":
+                    reports = reports.OrderByDescending(s => s.TimeSubmitted);
+                    break;
+                default:  // Name ascending 
+                    reports = reports.OrderBy(s => s.ReportName);
+                    break;
+            }
+
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+            return View(reports.ToPagedList(pageNumber, pageSize));
         }
 
+        public async Task<ActionResult> BrowseReportsBy(string county)
+        {
+            county = county.ToLower();
+            if (county.Contains(" county"))
+            {
+                int index = county.IndexOf(" ");
+                if (index > 0)
+                    county = county.Substring(0, index);
+            }
+
+            county = char.ToUpper(county[0]) + county.Substring(1);
+
+            var countyfull = county + " County";
+            var requestUri =
+              string.Format("http://maps.googleapis.com/maps/api/geocode/xml?address={0}&sensor=false",
+                  Uri.EscapeDataString(countyfull));
+
+            var request = WebRequest.Create(requestUri);
+            var response = request.GetResponse();
+            var xdoc = XDocument.Load(response.GetResponseStream());
+
+            if (xdoc.Element("GeocodeResponse").Element("status").ToString() == "ZERO_RESULTS")
+            {
+                return View("CountyNotFound");
+            }
+
+            if (!xdoc.ToString().ToLower().Contains(countyfull.ToLower()))
+            {
+                return View("CountyNotFound");
+            }
+
+            
+            return View(await db.Reports.Where(u => u.ReportCounty == county).ToListAsync());
+        }
+
+        // GET: Reports
+        [Authorize]
+        public async Task<ActionResult> Index()
+        {
+            var userid = User.Identity.GetUserId();
+            ApplicationUser currentuser = db.Users.FirstOrDefault(u => u.Id == userid);
+
+            return View(await db.Reports.Where(u => u.ApplicationUser == currentuser).ToListAsync());
+        }
+
+
+        [Authorize]
+        public async Task<ActionResult> InMyArea()
+        {
+            var userid = User.Identity.GetUserId();
+            var currentuser = db.Users.FirstOrDefault(u => u.Id == userid);
+            var county = currentuser.County;
+            return View(await db.Reports.Where(u => u.ReportCounty == county).ToListAsync());
+        }
+
+
         // GET: Reports/Details/5
+        [Authorize]
         public async Task<ActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Report report = await db.Reports.FindAsync(id);
+            if (report == null)
+            {
+                return HttpNotFound();
+            }
+            if (report.ApplicationUser.Id != User.Identity.GetUserId())
+                return View("Index");
+            return View(report);
+        }
+
+        public async Task<ActionResult> ViewReport(int? id)
         {
             if (id == null)
             {
@@ -85,6 +205,7 @@ namespace ErieHackMVP1
         }
 
         // GET: Reports/Edit/5
+        [Authorize]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -96,6 +217,10 @@ namespace ErieHackMVP1
             {
                 return HttpNotFound();
             }
+            var userid = User.Identity.GetUserId();
+            var currentuser = db.Users.FirstOrDefault(u => u.Id == userid);
+            if (report.ApplicationUser != currentuser)
+                return View("Index");
             return View(report);
         }
 
@@ -116,6 +241,7 @@ namespace ErieHackMVP1
         }
 
         // GET: Reports/Delete/5
+        [Authorize]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -127,6 +253,10 @@ namespace ErieHackMVP1
             {
                 return HttpNotFound();
             }
+            var userid = User.Identity.GetUserId();
+            var currentuser = db.Users.FirstOrDefault(u => u.Id == userid);
+            if (report.ApplicationUser != currentuser)
+                return View("Index");
             return View(report);
         }
 

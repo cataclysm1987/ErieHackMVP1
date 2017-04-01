@@ -1,0 +1,15 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "County Not Found";
+    Layout = "../../Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<br/>
+<p>We could not find a county for the value you entered. </p>
+<br/>
+<p>Please enter the county again.</p>
+
+@Html.ActionLink("Click Here To Reenter", "BrowseReports", "Reports", null, new {@class="btn-lg btn btn-primary"})

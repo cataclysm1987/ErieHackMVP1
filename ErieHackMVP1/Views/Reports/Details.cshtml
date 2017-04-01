@@ -70,6 +70,7 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ReportId }) |
+    @Html.ActionLink("Edit", "Edit", new {id = Model.ReportId})
+    @Html.ActionLink("Delete", "Delete", new { id = Model.ReportId })
     @Html.ActionLink("Back to List", "Index")
 </p>
