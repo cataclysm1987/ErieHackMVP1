@@ -237,7 +237,6 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\SendMailController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -253,11 +252,14 @@
     <Compile Include="Migrations\201703291425219_SMSroute.Designer.cs">
       <DependentUpon>201703291425219_SMSroute.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704011828585_issubscribed.cs" />
+    <Compile Include="Migrations\201704011828585_issubscribed.Designer.cs">
+      <DependentUpon>201704011828585_issubscribed.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ContactViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\Mail.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Report.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -330,7 +332,6 @@
     <Content Include="Views\Reports\Details.cshtml" />
     <Content Include="Views\Reports\Edit.cshtml" />
     <Content Include="Views\Reports\Index.cshtml" />
-    <Content Include="Views\SendMail\Index.cshtml" />
     <Content Include="Views\Reports\Wait.cshtml" />
     <Content Include="Views\Account\CountyNotFound.cshtml" />
     <Content Include="Views\Home\FAQ.cshtml" />
@@ -358,6 +359,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703291425219_SMSroute.resx">
       <DependentUpon>201703291425219_SMSroute.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704011828585_issubscribed.resx">
+      <DependentUpon>201704011828585_issubscribed.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

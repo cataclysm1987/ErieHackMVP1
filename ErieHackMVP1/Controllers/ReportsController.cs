@@ -81,41 +81,6 @@ namespace ErieHackMVP1
             return View(reports.ToPagedList(pageNumber, pageSize));
         }
 
-        public async Task<ActionResult> BrowseReportsBy(string county)
-        {
-            county = county.ToLower();
-            if (county.Contains(" county"))
-            {
-                int index = county.IndexOf(" ");
-                if (index > 0)
-                    county = county.Substring(0, index);
-            }
-
-            county = char.ToUpper(county[0]) + county.Substring(1);
-
-            var countyfull = county + " County";
-            var requestUri =
-              string.Format("http://maps.googleapis.com/maps/api/geocode/xml?address={0}&sensor=false",
-                  Uri.EscapeDataString(countyfull));
-
-            var request = WebRequest.Create(requestUri);
-            var response = request.GetResponse();
-            var xdoc = XDocument.Load(response.GetResponseStream());
-
-            if (xdoc.Element("GeocodeResponse").Element("status").ToString() == "ZERO_RESULTS")
-            {
-                return View("CountyNotFound");
-            }
-
-            if (!xdoc.ToString().ToLower().Contains(countyfull.ToLower()))
-            {
-                return View("CountyNotFound");
-            }
-
-            
-            return View(await db.Reports.Where(u => u.ReportCounty == county).ToListAsync());
-        }
-
         // GET: Reports
         [Authorize]
         public async Task<ActionResult> Index()
@@ -332,7 +297,7 @@ namespace ErieHackMVP1
                                 county + ". Please check WaterAlerts.com for more details.";
             foreach (var user in db.Users)
             {
-                if (user.County == county)
+                if (user.County == county && user.IsSubscribedToUpdates == YesNo.Yes)
                 {
                     MailMessage mail = new MailMessage();
                     mail.To.Add(user.SMSRoute);
@@ -356,6 +321,8 @@ namespace ErieHackMVP1
         {
             return View();
         }
+
+        
     }
 
 }

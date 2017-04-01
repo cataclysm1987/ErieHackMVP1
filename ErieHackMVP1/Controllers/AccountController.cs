@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using ErieHackMVP1.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace ErieHackMVP1.Controllers
 {
@@ -19,6 +20,7 @@ namespace ErieHackMVP1.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         public AccountController()
         {
@@ -548,5 +550,54 @@ namespace ErieHackMVP1.Controllers
         {
             return View();
         }
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async void Create100TestUsers()
+        {
+            for (int i = 1; i <= 100; i++)
+            {
+                var usercount = db.Users.Count();
+                usercount += i;
+                string username = "User" + usercount;
+                string email = username + "@gmail.com";
+                Carriers carrier = Carriers.Verizon;
+                long phone = 4405260000;
+                phone += i;
+                string phonestring = phone.ToString();
+
+
+                var user = new ApplicationUser
+                {
+                    UserName = username,
+                    Email = email,
+                    County = "Cuyahoga",
+                    Carrier = carrier,
+                    PhoneNumber = phonestring,
+                    IsSubscribedToUpdates = YesNo.No
+                };
+
+                user.SMSRoute = DetermineSMSRoute(user);
+                var result = await UserManager.CreateAsync(user, "Winter89!");
+                if (result.Succeeded)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
+                    // Send an email with this link
+                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                    
+                }
+                AddErrors(result);
+            }
+            
+        }
+
+        
     }
 }
