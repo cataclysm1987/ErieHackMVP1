@@ -12,6 +12,7 @@ namespace ErieHackMVP1.Models
         public string PhoneNumber { get; set; }
         public bool TwoFactor { get; set; }
         public bool BrowserRemembered { get; set; }
+        public YesNo IsSubscribed { get; set; }
     }
 
     public class ManageLoginsViewModel

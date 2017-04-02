@@ -1,4 +1,5 @@
-﻿@model ErieHackMVP1.Models.IndexViewModel
+﻿@using ErieHackMVP1.Models
+@model ErieHackMVP1.Models.IndexViewModel
 @{
     ViewBag.Title = "Manage";
 }
@@ -10,6 +11,17 @@
     <h4>Change your account settings</h4>
     <hr />
     <dl class="dl-horizontal">
+        <dt>Notification Settings</dt>
+        <dd>
+            @if (Model.IsSubscribed == YesNo.No)
+            {
+                @Html.ActionLink("You are currently not subscribed to text alerts. Click here to update your settings.", "SubscriptionOptions", "Account")
+            }
+            else
+            {
+                @Html.ActionLink("You are currently subscribed to text alerts. Click here to take update your settings.", "SubscriptionOptions", "Account")
+            }
+        </dd>
         <dt>Password:</dt>
         <dd>
             [
