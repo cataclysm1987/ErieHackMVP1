@@ -93,6 +93,17 @@ namespace ErieHackMVP1.Models
         [Required]
         [Display(Name = "Mobile Carrier")]
         public Carriers Carrier { get; set; }
+
+        [Required]
+        [Display(Name = "Subscribe to Text Notifications?")]
+        public YesNo IsSubscribed { get; set; }
+    }
+
+    public class SubscriptionOptionsViewModel
+    {
+        [Required]
+        [Display(Name = "Subscribe to Text Notifications?")]
+        public YesNo IsSubscribed { get; set; }
     }
 
     public class ResetPasswordViewModel

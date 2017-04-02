@@ -338,6 +338,7 @@
     <Content Include="Views\Reports\CountyNotFound.cshtml" />
     <Content Include="Views\Reports\BrowseReports.cshtml" />
     <Content Include="Views\Reports\ViewReport.cshtml" />
+    <Content Include="Views\Account\SubscriptionOptions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

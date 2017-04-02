@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -26,7 +27,7 @@ namespace ErieHackMVP1.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -34,26 +35,14 @@ namespace ErieHackMVP1.Controllers
 
         public ApplicationSignInManager SignInManager
         {
-            get
-            {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            }
-            private set 
-            { 
-                _signInManager = value; 
-            }
+            get { return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>(); }
+            private set { _signInManager = value; }
         }
 
         public ApplicationUserManager UserManager
         {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
+            get { return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>(); }
+            private set { _userManager = value; }
         }
 
         //
@@ -79,7 +68,8 @@ namespace ErieHackMVP1.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe,
+                shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -87,7 +77,7 @@ namespace ErieHackMVP1.Controllers
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    return RedirectToAction("SendCode", new {ReturnUrl = returnUrl, RememberMe = model.RememberMe});
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
@@ -105,7 +95,7 @@ namespace ErieHackMVP1.Controllers
             {
                 return View("Error");
             }
-            return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
+            return View(new VerifyCodeViewModel {Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe});
         }
 
         //
@@ -124,7 +114,8 @@ namespace ErieHackMVP1.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code,
+                isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -161,15 +152,15 @@ namespace ErieHackMVP1.Controllers
                 {
                     int index = model.County.IndexOf(" ");
                     if (index > 0)
-                    model.County = model.County.Substring(0, index);
+                        model.County = model.County.Substring(0, index);
                 }
 
                 model.County = char.ToUpper(model.County[0]) + model.County.Substring(1);
 
                 var countyfull = model.County + " County";
                 var requestUri =
-                  string.Format("http://maps.googleapis.com/maps/api/geocode/xml?address={0}&sensor=false",
-                      Uri.EscapeDataString(countyfull));
+                    string.Format("http://maps.googleapis.com/maps/api/geocode/xml?address={0}&sensor=false",
+                        Uri.EscapeDataString(countyfull));
 
                 var request = WebRequest.Create(requestUri);
                 var response = request.GetResponse();
@@ -180,19 +171,26 @@ namespace ErieHackMVP1.Controllers
                     return View("CountyNotFound");
                 }
 
-                var xdocstring = xdoc.ToString().ToLower();
                 if (!xdoc.ToString().ToLower().Contains(countyfull.ToLower()))
                 {
                     return View("CountyNotFound");
                 }
 
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, County = model.County, Carrier = model.Carrier, PhoneNumber = model.PhoneNumber};
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    County = model.County,
+                    Carrier = model.Carrier,
+                    PhoneNumber = model.PhoneNumber,
+                    IsSubscribedToUpdates = model.IsSubscribed
+                };
                 user.SMSRoute = DetermineSMSRoute(user);
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
@@ -315,7 +313,8 @@ namespace ErieHackMVP1.Controllers
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
             // Request a redirect to the external login provider
-            return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
+            return new ChallengeResult(provider,
+                Url.Action("ExternalLoginCallback", "Account", new {ReturnUrl = returnUrl}));
         }
 
         //
@@ -329,8 +328,10 @@ namespace ErieHackMVP1.Controllers
                 return View("Error");
             }
             var userFactors = await UserManager.GetValidTwoFactorProvidersAsync(userId);
-            var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
-            return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
+            var factorOptions =
+                userFactors.Select(purpose => new SelectListItem {Text = purpose, Value = purpose}).ToList();
+            return
+                View(new SendCodeViewModel {Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe});
         }
 
         //
@@ -350,7 +351,8 @@ namespace ErieHackMVP1.Controllers
             {
                 return View("Error");
             }
-            return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
+            return RedirectToAction("VerifyCode",
+                new {Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe});
         }
 
         //
@@ -373,13 +375,14 @@ namespace ErieHackMVP1.Controllers
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
+                    return RedirectToAction("SendCode", new {ReturnUrl = returnUrl, RememberMe = false});
                 case SignInStatus.Failure:
                 default:
                     // If the user does not have an account, then prompt the user to create an account
                     ViewBag.ReturnUrl = returnUrl;
                     ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                    return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
+                    return View("ExternalLoginConfirmation",
+                        new ExternalLoginConfirmationViewModel {Email = loginInfo.Email});
             }
         }
 
@@ -388,7 +391,8 @@ namespace ErieHackMVP1.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl)
+        public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model,
+            string returnUrl)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -403,7 +407,7 @@ namespace ErieHackMVP1.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser {UserName = model.Email, Email = model.Email};
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -459,6 +463,7 @@ namespace ErieHackMVP1.Controllers
             base.Dispose(disposing);
         }
 
+
         private static string DetermineSMSRoute(ApplicationUser user)
         {
             string smsemail = null;
@@ -488,15 +493,13 @@ namespace ErieHackMVP1.Controllers
         }
 
         #region Helpers
+
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
         private IAuthenticationManager AuthenticationManager
         {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
+            get { return HttpContext.GetOwinContext().Authentication; }
         }
 
         private void AddErrors(IdentityResult result)
@@ -536,7 +539,7 @@ namespace ErieHackMVP1.Controllers
 
             public override void ExecuteResult(ControllerContext context)
             {
-                var properties = new AuthenticationProperties { RedirectUri = RedirectUri };
+                var properties = new AuthenticationProperties {RedirectUri = RedirectUri};
                 if (UserId != null)
                 {
                     properties.Dictionary[XsrfKey] = UserId;
@@ -544,6 +547,7 @@ namespace ErieHackMVP1.Controllers
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }
+
         #endregion
 
         public ActionResult CountyNotFound()
@@ -591,13 +595,33 @@ namespace ErieHackMVP1.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    
+
                 }
                 AddErrors(result);
             }
-            
+
         }
 
-        
+        [Authorize]
+        public ViewResult SubscriptionOptions()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult SubscriptionOptions(SubscriptionOptionsViewModel vm)
+        {
+            var userid = User.Identity.GetUserId();
+            var currentuser = db.Users.FirstOrDefault(u => u.Id == userid);
+            currentuser.IsSubscribedToUpdates = vm.IsSubscribed;
+
+            db.Entry(currentuser).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("Index", "Home");
+        }
+
+
     }
 }
