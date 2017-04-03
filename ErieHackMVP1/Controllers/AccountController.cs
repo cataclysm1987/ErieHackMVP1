@@ -134,6 +134,11 @@ namespace ErieHackMVP1.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            var userid = User.Identity.GetUserId();
+            if (userid != null)
+            {
+                return RedirectToAction("Index", "Manage");
+            }
             return View();
         }
 

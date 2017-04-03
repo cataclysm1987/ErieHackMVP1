@@ -76,7 +76,7 @@ namespace ErieHackMVP1
                     break;
             }
 
-            int pageSize = 3;
+            int pageSize = 10;
             int pageNumber = (page ?? 1);
             return View(reports.ToPagedList(pageNumber, pageSize));
         }
@@ -86,19 +86,20 @@ namespace ErieHackMVP1
         public async Task<ActionResult> Index()
         {
             var userid = User.Identity.GetUserId();
-            ApplicationUser currentuser = db.Users.FirstOrDefault(u => u.Id == userid);
 
-            return View(await db.Reports.Where(u => u.ApplicationUser == currentuser).ToListAsync());
+            return View(await db.Reports.Where(u => u.ApplicationUser.Id == userid).ToListAsync());
         }
 
 
         [Authorize]
-        public async Task<ActionResult> InMyArea()
+        public  ActionResult InMyArea(int? page)
         {
             var userid = User.Identity.GetUserId();
             var currentuser = db.Users.FirstOrDefault(u => u.Id == userid);
             var county = currentuser.County;
-            return View(await db.Reports.Where(u => u.ReportCounty == county).ToListAsync());
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            return View(db.Reports.Where(u => u.ReportCounty == county).ToPagedList(pageNumber, pageSize));
         }
 
 

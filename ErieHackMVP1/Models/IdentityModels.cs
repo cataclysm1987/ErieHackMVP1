@@ -52,5 +52,9 @@ namespace ErieHackMVP1.Models
         {
             return new ApplicationDbContext();
         }
+
+        //Multiple object sets per type are not supported. The object sets 'ApplicationUsers' and 'Users' can both contain instances of type 'ErieHackMVP1.Models.ApplicationUser'.
+        //Commented out to fix issue. Only use db.Users to access a dbcontext due to this error.
+        //public System.Data.Entity.DbSet<ErieHackMVP1.Models.ApplicationUser> ApplicationUsers { get; set; }
     }
 }

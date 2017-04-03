@@ -13,11 +13,8 @@ namespace ErieHackMVP1
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            routes.MapRoute(
-                "OnlyAction",
-                "{action}",
-                new { controller = "Home", action = "Index" }
-            );
+            
+           
 
             routes.MapRoute("Browse", "Browse/{query}/{startIndex}",
                         new

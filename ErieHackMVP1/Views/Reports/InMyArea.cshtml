@@ -1,0 +1,78 @@
+﻿@model PagedList.IPagedList<ErieHackMVP1.Models.Report>
+@using PagedList.Mvc;
+
+
+@{
+    ViewBag.Title = "Browse Reports In My Area";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Browse Reports In My Area</h2>
+
+<p>
+    @Html.ActionLink("Submit a Report", "Create")
+</p>
+
+@using (Html.BeginForm("BrowseReports", "Reports", FormMethod.Get))
+{
+    <p>
+        Search Reports @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Search" class="btn btn-primary"/>
+    </p>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Report Name", "BrowseReports", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            Source
+        </th>
+        <th>
+            Problem
+        </th>
+        <th>
+            County Reported
+        </th>
+        <th>
+            @Html.ActionLink("Time Submitted", "BrowseReports", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReportName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Source)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Problem)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReportCounty)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TimeSubmitted)
+            </td>
+            <td>
+                @Html.ActionLink("View Report", "ViewReport", new { id = item.ReportId })
+            </td>
+        </tr>
+    }
+
+</table>
+    
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("BrowseReports",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+
+
+
+<br/>

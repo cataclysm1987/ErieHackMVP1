@@ -5,11 +5,16 @@ using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using ErieHackMVP1.Models;
+using Microsoft.AspNet.Identity;
+using PagedList;
+using MvcPaging;
 
 namespace ErieHackMVP1.Controllers
 {
     public class HomeController : Controller
     {
+        private ApplicationDbContext db = new ApplicationDbContext();
+
         public ActionResult Index()
         {
             ViewBag.Title = "Home";
@@ -77,6 +82,33 @@ namespace ErieHackMVP1.Controllers
         public ActionResult Error()
         {
             return View();
+        }
+
+        [Authorize]
+        public ActionResult Welcome()
+        {
+            var welcome = new WelcomeViewModel();
+            var userid = User.Identity.GetUserId();
+            var user = db.Users.FirstOrDefault(u => u.Id == userid);
+            welcome.User = user;
+            welcome.Reports =  db.Reports.ToList().Where(u => u.ApplicationUser == user);
+            var last30days = DateTime.Now.AddDays(-30);
+            welcome.ReportsByUserLast30Days =
+                
+                db.Reports.ToList().Where(u => u.ApplicationUser == user)
+                    .Where(u => u.TimeSubmitted >= last30days);
+            var usercounty = user.County;
+            welcome.ReportsInCounty = db.Reports.ToList().Where(u => u.ReportCounty == usercounty);
+            welcome.ReportsInCountyLast30Days =
+                
+                db.Reports.ToList().Where(u => u.ReportCounty == usercounty)
+                    .Where(u => u.TimeSubmitted >= last30days);
+            welcome.ReportsByUserLast30DaysInt = welcome.ReportsByUserLast30Days.Count();
+            welcome.ReportsInCountyLast30DaysInt = welcome.ReportsInCountyLast30Days.Count();
+            welcome.ReportsInCountyInt = welcome.ReportsInCounty.Count();
+            welcome.ReportsInt = welcome.Reports.Count();
+
+            return View(welcome);
         }
     }
 }

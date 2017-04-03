@@ -1,0 +1,49 @@
+﻿@model ErieHackMVP1.Models.WelcomeViewModel
+
+@{
+    ViewBag.Title = "Welcome";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Welcome to Erie Water Alerts!</h2>
+
+<div id="container">
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <h3>Interested in hearing what others have reported in your area?</h3>
+            <p>You can quickly search through reports of water issues in your area. Get an idea of the issues others have experienced.</p>
+            @Html.ActionLink("View Reports in Your Area", "InMyArea", "Reports", null, new { @class = "btn btn-default" })
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <h3>Ready to Submit a report?</h3>
+            <p>Our reports help others in your area be alert of possible issues with water. While we are not a water authority or government agency, this information can help your neighbors know about potential issues.</p>
+            @Html.ActionLink("Submit a Report", "Create", "Reports", null, new { @class = "btn btn-default" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12"><h3>Current Report Stats</h3></div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <h4>Reports Submitted By You:</h4>
+            <p>@Html.DisplayFor(model => model.ReportsInt) Reports</p>
+            <p>@Html.ActionLink("See My Reports", "Index", "Reports")</p>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <h4>Reports Submitted By You in Last 30 Days:</h4>
+            <p>@Html.DisplayFor(model => model.ReportsByUserLast30DaysInt) Reports</p>
+            <p>@Html.ActionLink("See My Reports", "Index", "Reports")</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <h4>Total Reports in Your County</h4>
+            <p>@Html.DisplayFor(model => model.ReportsInCountyInt)</p>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <h4>Total Reports in Your County in the Last 30 Days</h4>
+            <p>@Html.DisplayFor(model => model.ReportsInCountyLast30DaysInt)</p>
+        </div>
+    </div>
+</div>
+
