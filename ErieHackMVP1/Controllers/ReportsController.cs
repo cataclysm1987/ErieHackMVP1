@@ -256,6 +256,7 @@ namespace ErieHackMVP1
                 var counties = db.Reports.Select(u => u.ReportCounty).Distinct();
                 foreach (var county in counties)
                 {
+                    var fivepercentofcounty = db.Users.Count(u => u.County == county) / 20;
                     if (reports.Count(u => u.ReportCounty == county) >= 5)
                     {
                         var countyreports = reports.Where(u => u.ReportCounty == county);
@@ -265,23 +266,23 @@ namespace ErieHackMVP1
                         var tapwater = countyreports.Count(u => u.Source == SourceAffected.TapWater);
                         var well = countyreports.Count(u => u.Source == SourceAffected.Well);
                         var river = countyreports.Count(u => u.Source == SourceAffected.River);
-                        if (river >= 5)
+                        if (river >= fivepercentofcounty)
                         {
                              SubmitAlert(county, "river");
                         }
-                        if (well >= 5)
+                        if (well >= fivepercentofcounty)
                         {
                             SubmitAlert(county, "well");
                         }
-                        if (tapwater >= 5)
+                        if (tapwater >= fivepercentofcounty)
                         {
                             SubmitAlert(county, "tap water");
                         }
-                        if (reservoir >= 5)
+                        if (reservoir >= fivepercentofcounty)
                         {
                             SubmitAlert(county, "reservoir");
                         }
-                        if (lake >= 5)
+                        if (lake >= fivepercentofcounty)
                         {
                             SubmitAlert(county, "lake");
                         }
