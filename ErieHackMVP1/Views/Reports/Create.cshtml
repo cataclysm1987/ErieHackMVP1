@@ -11,7 +11,7 @@
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
-    
+    @Html.HiddenFor(u=> u.ReportCounty)
     <div class="form-horizontal">
         <h4>Report</h4>
         <hr />

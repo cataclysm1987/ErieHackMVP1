@@ -141,11 +141,13 @@ namespace ErieHackMVP1
         {
             var userid = User.Identity.GetUserId();
             var recent = DateTime.Now.AddDays(-2);
-            var recentreport = db.Reports.Where(u => u.TimeSubmitted >= recent);
-            var usercount = recentreport.Count(u => u.ApplicationUser.Id == userid);
-            if (usercount > 0)
+            var recentreports = db.Reports.Where(u => u.TimeSubmitted >= recent).Count(u => u.ApplicationUser.Id == userid);
+            if (recentreports > 0)
                 return RedirectToAction("Wait", "Reports");
-            return View();
+            var report = new Report();
+            var currentuser = db.Users.FirstOrDefault(u => u.Id == userid);
+            report.ReportCounty = currentuser.County;
+            return View(report);
         }
 
         // POST: Reports/Create
@@ -155,6 +157,7 @@ namespace ErieHackMVP1
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "ReportId,ReportName,ReportDescription,Source,Problem,ReportCounty,TimeSubmitted,TimeObserved")] Report report)
         {
+            
             if (ModelState.IsValid)
             {
                 var userId = User.Identity.GetUserId();
@@ -166,7 +169,7 @@ namespace ErieHackMVP1
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-
+            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
             return View(report);
         }
 
