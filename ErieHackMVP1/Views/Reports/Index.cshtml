@@ -16,9 +16,6 @@
             @Html.DisplayNameFor(model => model.ReportName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ReportDescription)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.Source)
         </th>
         <th>
@@ -30,9 +27,6 @@
         <th>
             @Html.DisplayNameFor(model => model.TimeSubmitted)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TimeObserved)
-        </th>
         <th></th>
     </tr>
 
@@ -40,9 +34,6 @@
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.ReportName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReportDescription)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Source)
@@ -55,9 +46,6 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.TimeSubmitted)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TimeObserved)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ReportId }) |
