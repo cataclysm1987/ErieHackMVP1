@@ -355,6 +355,7 @@
     <Content Include="Views\Account\SubscriptionOptions.cshtml" />
     <Content Include="Views\Home\Welcome.cshtml" />
     <Content Include="Views\Reports\InMyArea.cshtml" />
+    <Content Include="Views\Account\Create100TestUsers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

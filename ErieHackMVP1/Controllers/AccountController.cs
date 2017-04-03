@@ -561,10 +561,8 @@ namespace ErieHackMVP1.Controllers
         }
 
 
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async void Create100TestUsers()
+        
+        public async Task<ViewResult> Create100TestUsers()
         {
             for (int i = 1; i <= 100; i++)
             {
@@ -604,7 +602,7 @@ namespace ErieHackMVP1.Controllers
                 }
                 AddErrors(result);
             }
-
+            return View();
         }
 
         [Authorize]
@@ -626,6 +624,8 @@ namespace ErieHackMVP1.Controllers
             db.SaveChanges();
             return RedirectToAction("Index", "Home");
         }
+
+        
 
 
     }
