@@ -259,7 +259,7 @@ namespace ErieHackMVP1
                     var fivepercentofcounty = db.Users.Count(u => u.County == county) / 20;
                     if (fivepercentofcounty < 5)
                         fivepercentofcounty = 5;
-                    if (reports.Count(u => u.ReportCounty == county) >= 5)
+                    if (reports.Count(u => u.ReportCounty == county) >= fivepercentofcounty)
                     {
                         var countyreports = reports.Where(u => u.ReportCounty == county);
                         //Count the number of sources affected. If any source is above 5, begin generating report.
