@@ -7,44 +7,47 @@
         margin-bottom: 60px;
     }
 </style>
-
-<div class="jumbotron lake-bg">
-    <h1>Get Alerts About Your Water</h1>
-    <p class="lead">
-        Concerned about your water? Get a free text message notification anytime someone in your area reports a problem.
-    </p>
-    <p>@Html.ActionLink("Sign Up Now!", "Register", "Account", null, new { @class="btn btn-primary btn-lg" })</p>
 </div>
-
-<div class="row">
-    <div class="col-md-6">
-        <h2>Negative impacts on our lake</h2>
-        <p>
-            Lake Erie is suffering from all sorts of pollution. It suffers from farm runoff waste,
-            local trash, an abundance of algae blooms and pollution in the air. This affects the water we drink, the aquatic ecosystem,
-            and more importantly it looks horrible which can stray many away from not coming close to the lake at all!
+<div class="jumbotron lake-bg">
+    <div class="container">
+        <h1>Get Alerts About Your Water</h1>
+        <p class="lead">
+            Concerned about your water? Get a free text message notification when people in your area report a problem.
         </p>
-        <p>@Html.ActionLink("Try It Now", "Register", "Account", null, new { @class = "btn btn-default" })</p>
+        <p>@Html.ActionLink("Sign Up Now!", "Register", "Account", null, new {@class = "btn btn-primary btn-lg"})</p>
     </div>
-    <div class="col-md-6">
-        <h2>Our vision for Lake Erie</h2>
-        <p>
-            Lake Erie has an huge impact on our economy and state of well being. We absolutely need for the Lake to be healthy
-            because our lives will all be affected. Our vision is to get Lake Erie healthier than it's ever been. A healthier lake
-            will create more job opportunities, more entertainment and most importantly great quality drinking water!
-        </p>
-        <p>@Html.ActionLink("Register Today", "Register", "Account", null, new { @class = "btn btn-default" })</p>
-    </div>
-    <br />
-    <br />
-    <div style="text-align:center" , class="col-md-12">
-        <h2>Take Action and Help Your Community</h2>
-        <p>
-            There are many ways that you can take action.Just to name a few you can get involved in a community project,
-            reach out to collaborate in ways of help the lake, report pollution, or report Algae sources.
-            The important thing is to educate yourself first then educate the people closest to you. Before you know it, everyone
-            will be informed and we will be on our way to More Life!
-        </p>
-        <p>@Html.ActionLink("Get The App", "Register", "Account", null, new { @class = "btn btn-default" })</p>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Negative impacts on our lake</h2>
+            <p>
+                Lake Erie is suffering from all sorts of pollution. It suffers from farm runoff waste,
+                local trash, an abundance of algae blooms and pollution in the air. This affects the water we drink, the aquatic ecosystem,
+                and more importantly it looks horrible which can stray many away from not coming close to the lake at all!
+            </p>
+            <p>@Html.ActionLink("Try It Now", "Register", "Account", null, new { @class = "btn btn-default" })</p>
+        </div>
+        <div class="col-md-6">
+            <h2>Our vision for Lake Erie</h2>
+            <p>
+                Lake Erie has an huge impact on our economy and state of well being. We absolutely need for the Lake to be healthy
+                because our lives will all be affected. Our vision is to get Lake Erie healthier than it's ever been. A healthier lake
+                will create more job opportunities, more entertainment and most importantly great quality drinking water!
+            </p>
+            <p>@Html.ActionLink("Register Today", "Register", "Account", null, new { @class = "btn btn-default" })</p>
+        </div>
+        <br />
+        <br />
+        <div style="text-align:center" , class="col-md-12">
+            <h2>Take Action and Help Your Community</h2>
+            <p>
+                There are many ways that you can take action.Just to name a few you can get involved in a community project,
+                reach out to collaborate in ways of help the lake, report pollution, or report Algae sources.
+                The important thing is to educate yourself first then educate the people closest to you. Before you know it, everyone
+                will be informed and we will be on our way to More Life!
+            </p>
+            <p>@Html.ActionLink("Get The App", "Register", "Account", null, new { @class = "btn btn-default" })</p>
+        </div>
     </div>
 </div>

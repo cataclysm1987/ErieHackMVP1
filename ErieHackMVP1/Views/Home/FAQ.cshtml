@@ -4,36 +4,63 @@
 <h2>@ViewBag.Message</h2>
 
 <br />
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <h3>What is Erie Water Alerts?</h3>
 
-<h3>What is Erie Water Alerts?</h3>
+            <p>We are a free service that provides users text notifications if there is a problem with water in their area.</p>
+        </div>
 
-<p>We are a free service that provides users text notifications if there is a problem with water in their area.</p>
+        <div class="col-md-6 col-sm-12">
+            <h3>How Do I Get Started?</h3>
 
-<h3>How Do I Get Started?</h3>
+            <p>Go to our @Html.ActionLink("Register", "Register", "Account") page and enter your information. Be sure to specify an appropriate county where you receive your water and a cell phone carrier.</p>
 
-<p>Go to our @Html.ActionLink("Register", "Register", "Account") page and enter your information. Be sure to specify an appropriate county where you receive your water and a cell phone carrier.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <h3>Do you have a mobile application?</h3>
 
-<h3>Do you have a mobile application?</h3>
+            <p>We are currently in the process of developing a mobile application. Until then, all alerts are sent via text message.</p>
+        </div>
 
-<p>We are currently in the process of developing a mobile application. Until then, all alerts are sent via text message.</p>
+        <div class="col-md-6 col-sm-12">
+            <h3>What happens when I submit a report?</h3>
 
-<h3>What happens when I submit a report?</h3>
+            <p>We add it to our database. If a significant portion of the population in your area reports an issue, we issue a notification to everyone in that area. You can unsubscribe from these notifications at any time in your user account settings. You can also opt to only receive reports via e-mail instead of a text message.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <h3>What types of reports can we submit?</h3>
 
-<p>We add it to our database. If a significant portion of the population in your area reports an issue, we issue a notification to everyone in that area. You can unsubscribe from these notifications at any time in your user account settings. You can also opt to only receive reports via e-mail instead of a text message.</p>
+            <p>Each report allows you select a source and an issue. The source can be a local lake, stream or tap water. Issues includes types of problems such as a broken water line, sewage, pollution or other problems.</p>
 
-<h3>What types of reports can we submit?</h3>
+            <br/>
 
-<p>Each report allows you select a source and an issue. The source can be a local lake, stream or tap water. Issues includes types of problems such as a broken water line, sewage, pollution or other problems.</p>
+            <p>After selecting these options, we also ask for a description of the issue. Please be as detailed as possible.</p>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <h3>Does this information go to my local water authority?</h3>
 
-<br/>
+            <p>We encourage people to reach out to their local water authority to report issues. We also encourage public officials to sign up to use our application.</p>
 
-<p>After selecting these options, we also ask for a description of the issue. Please be as detailed as possible.</p>
+            <br/>
 
-<h3>Does this information go to my local water authority?</h3>
-
-<p>We encourage people to reach out to their local water authority to report issues. We also encourage public officials to sign up to use our application.</p>
-
-<br/>
-
-<p>However, we do not directly forward any information to these entities. All information is processed by our website only and anyone wanting access to it can sign up and use the website as an official or as a normal user.</p>
-
+            <p>However, we do not directly forward any information to these entities. All information is processed by our website only and anyone wanting access to it can sign up and use the website as an official or as a normal user.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <h3>What If I just want to submit a report and not get text messages?</h3>
+            <p>No problem. You can adjust your settings at any time in your user control panel to turn off text alerts. </p>
+            <p>We issue alerts at most once every 24 hours. We respect your privacy and will not issue you an alert if you turn off these settings.</p>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <h3>How often do you issue alerts?</h3>
+            <p>We calculate 5 percent of a county's users with a minimum of 5 users. When that amount or more reports a problem with the same water source, we issue an alert.</p>
+        </div>
+    </div>
+</div>

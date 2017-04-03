@@ -76,44 +76,9 @@ namespace ErieHackMVP1
                     break;
             }
 
-            int pageSize = 3;
+            int pageSize = 10;
             int pageNumber = (page ?? 1);
             return View(reports.ToPagedList(pageNumber, pageSize));
-        }
-
-        public async Task<ActionResult> BrowseReportsBy(string county)
-        {
-            county = county.ToLower();
-            if (county.Contains(" county"))
-            {
-                int index = county.IndexOf(" ");
-                if (index > 0)
-                    county = county.Substring(0, index);
-            }
-
-            county = char.ToUpper(county[0]) + county.Substring(1);
-
-            var countyfull = county + " County";
-            var requestUri =
-              string.Format("http://maps.googleapis.com/maps/api/geocode/xml?address={0}&sensor=false",
-                  Uri.EscapeDataString(countyfull));
-
-            var request = WebRequest.Create(requestUri);
-            var response = request.GetResponse();
-            var xdoc = XDocument.Load(response.GetResponseStream());
-
-            if (xdoc.Element("GeocodeResponse").Element("status").ToString() == "ZERO_RESULTS")
-            {
-                return View("CountyNotFound");
-            }
-
-            if (!xdoc.ToString().ToLower().Contains(countyfull.ToLower()))
-            {
-                return View("CountyNotFound");
-            }
-
-            
-            return View(await db.Reports.Where(u => u.ReportCounty == county).ToListAsync());
         }
 
         // GET: Reports
@@ -121,19 +86,20 @@ namespace ErieHackMVP1
         public async Task<ActionResult> Index()
         {
             var userid = User.Identity.GetUserId();
-            ApplicationUser currentuser = db.Users.FirstOrDefault(u => u.Id == userid);
 
-            return View(await db.Reports.Where(u => u.ApplicationUser == currentuser).ToListAsync());
+            return View(await db.Reports.Where(u => u.ApplicationUser.Id == userid).ToListAsync());
         }
 
 
         [Authorize]
-        public async Task<ActionResult> InMyArea()
+        public  ActionResult InMyArea(int? page)
         {
             var userid = User.Identity.GetUserId();
             var currentuser = db.Users.FirstOrDefault(u => u.Id == userid);
             var county = currentuser.County;
-            return View(await db.Reports.Where(u => u.ReportCounty == county).ToListAsync());
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            return View(db.Reports.Where(u => u.ReportCounty == county).ToPagedList(pageNumber, pageSize));
         }
 
 
@@ -175,11 +141,13 @@ namespace ErieHackMVP1
         {
             var userid = User.Identity.GetUserId();
             var recent = DateTime.Now.AddDays(-2);
-            var recentreport = db.Reports.Where(u => u.TimeSubmitted >= recent);
-            var usercount = recentreport.Count(u => u.ApplicationUser.Id == userid);
-            if (usercount > 0)
+            var recentreports = db.Reports.Where(u => u.TimeSubmitted >= recent).Count(u => u.ApplicationUser.Id == userid);
+            if (recentreports > 0)
                 return RedirectToAction("Wait", "Reports");
-            return View();
+            var report = new Report();
+            var currentuser = db.Users.FirstOrDefault(u => u.Id == userid);
+            report.ReportCounty = currentuser.County;
+            return View(report);
         }
 
         // POST: Reports/Create
@@ -189,6 +157,7 @@ namespace ErieHackMVP1
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "ReportId,ReportName,ReportDescription,Source,Problem,ReportCounty,TimeSubmitted,TimeObserved")] Report report)
         {
+            
             if (ModelState.IsValid)
             {
                 var userId = User.Identity.GetUserId();
@@ -200,7 +169,7 @@ namespace ErieHackMVP1
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-
+            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
             return View(report);
         }
 
@@ -290,7 +259,10 @@ namespace ErieHackMVP1
                 var counties = db.Reports.Select(u => u.ReportCounty).Distinct();
                 foreach (var county in counties)
                 {
-                    if (reports.Count(u => u.ReportCounty == county) >= 5)
+                    var fivepercentofcounty = db.Users.Count(u => u.County == county) / 20;
+                    if (fivepercentofcounty < 5)
+                        fivepercentofcounty = 5;
+                    if (reports.Count(u => u.ReportCounty == county) >= fivepercentofcounty)
                     {
                         var countyreports = reports.Where(u => u.ReportCounty == county);
                         //Count the number of sources affected. If any source is above 5, begin generating report.
@@ -299,23 +271,23 @@ namespace ErieHackMVP1
                         var tapwater = countyreports.Count(u => u.Source == SourceAffected.TapWater);
                         var well = countyreports.Count(u => u.Source == SourceAffected.Well);
                         var river = countyreports.Count(u => u.Source == SourceAffected.River);
-                        if (river >= 5)
+                        if (river >= fivepercentofcounty)
                         {
                              SubmitAlert(county, "river");
                         }
-                        if (well >= 5)
+                        if (well >= fivepercentofcounty)
                         {
                             SubmitAlert(county, "well");
                         }
-                        if (tapwater >= 5)
+                        if (tapwater >= fivepercentofcounty)
                         {
                             SubmitAlert(county, "tap water");
                         }
-                        if (reservoir >= 5)
+                        if (reservoir >= fivepercentofcounty)
                         {
                             SubmitAlert(county, "reservoir");
                         }
-                        if (lake >= 5)
+                        if (lake >= fivepercentofcounty)
                         {
                             SubmitAlert(county, "lake");
                         }
@@ -332,7 +304,7 @@ namespace ErieHackMVP1
                                 county + ". Please check WaterAlerts.com for more details.";
             foreach (var user in db.Users)
             {
-                if (user.County == county)
+                if (user.County == county && user.IsSubscribedToUpdates == YesNo.Yes)
                 {
                     MailMessage mail = new MailMessage();
                     mail.To.Add(user.SMSRoute);
@@ -356,6 +328,8 @@ namespace ErieHackMVP1
         {
             return View();
         }
+
+        
     }
 
 }
