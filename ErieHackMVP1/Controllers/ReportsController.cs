@@ -257,6 +257,8 @@ namespace ErieHackMVP1
                 foreach (var county in counties)
                 {
                     var fivepercentofcounty = db.Users.Count(u => u.County == county) / 20;
+                    if (fivepercentofcounty < 5)
+                        fivepercentofcounty = 5;
                     if (reports.Count(u => u.ReportCounty == county) >= 5)
                     {
                         var countyreports = reports.Where(u => u.ReportCounty == county);
