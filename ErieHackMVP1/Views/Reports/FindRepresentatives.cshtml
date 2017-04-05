@@ -53,33 +53,34 @@
         for (var i = 0; i < keysbyindex.length; i++) {
             $("#startoflist").append("<h2>" + officetoofficial[i] + "</h2>");
             $("#startoflist").append("<h3>" + valuesparsed.officials[keysbyindex[i]].name + "</h3>");
-            console.log(valuesparsed.officials[keysbyindex[i]].name);
+            
             if (typeof valuesparsed.officials[keysbyindex[i]].address != 'undefined') {
                 $("#startoflist").append("<p>" + valuesparsed.officials[keysbyindex[i]].address[0].line1 + " ");
-                console.log(valuesparsed.officials[keysbyindex[i]].address[0].line1);
+                
                 if (typeof valuesparsed.officials[keysbyindex[i]].address[0].line2 != 'undefined') {
-                    $("#startoflist").append("" + valuesparsed.officials[keysbyindex[i]].line2 + "</p><br>");
-                    console.log(valuesparsed.officials[keysbyindex[i]].address[0].line2);
-                } else {
-                    $("#startoflist").append("</p><br>");
-                }
-                $("#startoflist").append("<p>" + valuesparsed.officials[keysbyindex[i]].address[0].city + ", " + valuesparsed.officials[keysbyindex[i]].address[0].state + " " + valuesparsed.officials[keysbyindex[i]].address[0].zip);
-                console.log(valuesparsed.officials[keysbyindex[i]].address[0].city);
-                $("#startoflist").append("<p>" + valuesparsed.officials[keysbyindex[i]].address[0].state + " ");
-                console.log(valuesparsed.officials[keysbyindex[i]].address[0].state);
-                $("#startoflist").append("<p>" + valuesparsed.officials[keysbyindex[i]].address[0].zip + "</p><br>");
-                console.log(valuesparsed.officials[keysbyindex[i]].address[0].zip);
+                    $("#startoflist").append("" + valuesparsed.officials[keysbyindex[i]].address[0].line2 + "</p>");
+                    
+                } 
+                $("#startoflist").append("<p>" + valuesparsed.officials[keysbyindex[i]].address[0].city + ", " + valuesparsed.officials[keysbyindex[i]].address[0].state + " " + valuesparsed.officials[keysbyindex[i]].address[0].zip + "</p>");
+               
+                
             }
         
             if (typeof valuesparsed.officials[keysbyindex[i]].party != 'undefined') {
-                console.log(valuesparsed.officials[keysbyindex[i]].party);
+                
+                $("#startoflist")
+                    .append("<p>Political Party: " + valuesparsed.officials[keysbyindex[i]].party + " </p>");
             }
             if (typeof valuesparsed.officials[keysbyindex[i]].phones != 'undefined') {
-                console.log(valuesparsed.officials[keysbyindex[i]].phones[0]);
+                
+                $("#startoflist")
+                    .append("<p>Phone Number: <a href=\"tel:" + valuesparsed.officials[keysbyindex[i]].phones[0] + "\">" + valuesparsed.officials[keysbyindex[i]].phones[0] + "</a></p>");
             }
         
             if (typeof valuesparsed.officials[keysbyindex[i]].urls != 'undefined') {
-                console.log(valuesparsed.officials[keysbyindex[i]].urls[0]);
+                
+                $("#startoflist")
+                    .append("<a href=\"" + valuesparsed.officials[keysbyindex[i]].urls[0] + "\" target=\"_blank\"><p>Visit Website</p></a>");
             }
         
         }
@@ -91,7 +92,9 @@
 </script>
 
 <h2>@ViewBag.Title</h2>
-<br/>
+<h4>Want to get involved?</h4>
+<h5>We've got a list of representatives and officials right here so you can make a difference.</h5>
+<h5>Make your voice heard. Contact one of your elected officials today!</h5>
 <div id="container">
     <div id="startoflist"></div>
 </div>
