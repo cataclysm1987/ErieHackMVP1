@@ -34,6 +34,12 @@ namespace ErieHackMVP1.Controllers
             return View();
         }
 
+        public ViewResult TermsAndConditions()
+        {
+            ViewBag.Title = "Terms And Conditions";
+            return View();
+        }
+
 
         [HttpGet]
         public ActionResult Contact()
