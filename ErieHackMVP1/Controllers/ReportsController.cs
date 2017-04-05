@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using System.Xml.Linq;
 using ErieHackMVP1.Models;
 using Microsoft.AspNet.Identity;
@@ -349,6 +350,8 @@ namespace ErieHackMVP1
             string textResult = await response.Content.ReadAsStringAsync();
             var view = new CivicViewModel();
             view.JSResult = textResult;
+
+            
 
             return View(view);
         }
