@@ -185,6 +185,10 @@ namespace ErieHackMVP1.Controllers
                 {
                     UserName = model.Email,
                     Email = model.Email,
+                    StreetAddress = model.StreetAddress,
+                    City = model.City,
+                    State = model.State,
+                    ZipCode = model.ZipCode,
                     County = model.County,
                     Carrier = model.Carrier,
                     PhoneNumber = model.PhoneNumber,
