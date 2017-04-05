@@ -7,15 +7,91 @@
 
 
 <script>
+    //Declare values, arrays and keys
     var values = @Html.Raw(Json.Encode(Model.JSResult));
     var valuesparsed = JSON.parse(values);
     var keysbyindex = Object.keys(valuesparsed.officials);
-    console.log(JSON.stringify(keysbyindex));
+    var keysbyindexoffice = Object.keys(valuesparsed.offices);
+    var officetoofficial = new Array();
+    
+    //Create array of names of each official's office
+    for (var i = 0; i < keysbyindexoffice.length; i++) {
+        var currentname = valuesparsed.offices[keysbyindexoffice[i]].name;
+        for (var k = 0; k < valuesparsed.offices[keysbyindexoffice[i]].officialIndices.length; k++) {
+            officetoofficial.push(currentname);
+        }
+    }
+    
+    //Get information on each official
+    for (var i = 0; i < keysbyindex.length; i++) {
+        console.log(valuesparsed.officials[keysbyindex[i]].name);
+        if (typeof valuesparsed.officials[keysbyindex[i]].address != 'undefined') {
+            console.log(valuesparsed.officials[keysbyindex[i]].address[0].city);
+            console.log(valuesparsed.officials[keysbyindex[i]].address[0].line1);
+            if (typeof valuesparsed.officials[keysbyindex[i]].address[0].line2 != 'undefined') {
+                console.log(valuesparsed.officials[keysbyindex[i]].address[0].line2);
+            }
+            console.log(valuesparsed.officials[keysbyindex[i]].address[0].state);
+            console.log(valuesparsed.officials[keysbyindex[i]].address[0].zip);
+        }
+        
+        if (typeof valuesparsed.officials[keysbyindex[i]].party != 'undefined') {
+            console.log(valuesparsed.officials[keysbyindex[i]].party);
+        }
+        if (typeof valuesparsed.officials[keysbyindex[i]].phones != 'undefined') {
+            console.log(valuesparsed.officials[keysbyindex[i]].phones[0]);
+        }
+        
+        if (typeof valuesparsed.officials[keysbyindex[i]].urls != 'undefined') {
+            console.log(valuesparsed.officials[keysbyindex[i]].urls[0]);
+        }
+        
+    }
 
-    var presidentname = valuesparsed.officials["name"];
-    console.log(presidentname);
+    $( document ).ready(function() {
+        console.log( "ready!" );
+        for (var i = 0; i < keysbyindex.length; i++) {
+            $("#startoflist").append("<h2>" + officetoofficial[i] + "</h2>");
+            $("#startoflist").append("<h3>" + valuesparsed.officials[keysbyindex[i]].name + "</h3>");
+            console.log(valuesparsed.officials[keysbyindex[i]].name);
+            if (typeof valuesparsed.officials[keysbyindex[i]].address != 'undefined') {
+                $("#startoflist").append("<p>" + valuesparsed.officials[keysbyindex[i]].address[0].line1 + " ");
+                console.log(valuesparsed.officials[keysbyindex[i]].address[0].line1);
+                if (typeof valuesparsed.officials[keysbyindex[i]].address[0].line2 != 'undefined') {
+                    $("#startoflist").append("" + valuesparsed.officials[keysbyindex[i]].line2 + "</p><br>");
+                    console.log(valuesparsed.officials[keysbyindex[i]].address[0].line2);
+                } else {
+                    $("#startoflist").append("</p><br>");
+                }
+                $("#startoflist").append("<p>" + valuesparsed.officials[keysbyindex[i]].address[0].city + ", " + valuesparsed.officials[keysbyindex[i]].address[0].state + " " + valuesparsed.officials[keysbyindex[i]].address[0].zip);
+                console.log(valuesparsed.officials[keysbyindex[i]].address[0].city);
+                $("#startoflist").append("<p>" + valuesparsed.officials[keysbyindex[i]].address[0].state + " ");
+                console.log(valuesparsed.officials[keysbyindex[i]].address[0].state);
+                $("#startoflist").append("<p>" + valuesparsed.officials[keysbyindex[i]].address[0].zip + "</p><br>");
+                console.log(valuesparsed.officials[keysbyindex[i]].address[0].zip);
+            }
+        
+            if (typeof valuesparsed.officials[keysbyindex[i]].party != 'undefined') {
+                console.log(valuesparsed.officials[keysbyindex[i]].party);
+            }
+            if (typeof valuesparsed.officials[keysbyindex[i]].phones != 'undefined') {
+                console.log(valuesparsed.officials[keysbyindex[i]].phones[0]);
+            }
+        
+            if (typeof valuesparsed.officials[keysbyindex[i]].urls != 'undefined') {
+                console.log(valuesparsed.officials[keysbyindex[i]].urls[0]);
+            }
+        
+        }
+
+
+
+    });
+
 </script>
 
 <h2>@ViewBag.Title</h2>
 <br/>
-
+<div id="container">
+    <div id="startoflist"></div>
+</div>
