@@ -8,6 +8,7 @@
 
 <script>
     var values = @Html.Raw(Json.Encode(Model.JSResult));
+    var valuesparsed = JSON.parse(values);
 </script>
 
 <h2>@ViewBag.Title</h2>
