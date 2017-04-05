@@ -12,4 +12,8 @@
 <br/>
 <p>Please enter the county again.</p>
 
+@if (ViewBag.Message != null)
+{
+    <p>The system returned the following error: @ViewBag.Message</p>
+}
 @Html.ActionLink("Click Here To Reenter", "Register", "Account", null, new {@class="btn-lg btn btn-primary"})

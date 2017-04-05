@@ -163,21 +163,33 @@ namespace ErieHackMVP1.Controllers
                 model.County = char.ToUpper(model.County[0]) + model.County.Substring(1);
 
                 var countyfull = model.County + " County";
-                var requestUri =
-                    string.Format("http://maps.googleapis.com/maps/api/geocode/xml?address={0}&sensor=false",
-                        Uri.EscapeDataString(countyfull));
-
-                var request = WebRequest.Create(requestUri);
-                var response = request.GetResponse();
-                var xdoc = XDocument.Load(response.GetResponseStream());
-
-                if (xdoc.Element("GeocodeResponse").Element("status").ToString() == "ZERO_RESULTS")
+                var countyfullwithstate = countyfull + " " + model.State;
+                //Try to validate with google web service, return to page with error if failed
+                try
                 {
-                    return View("CountyNotFound");
+
+
+                    var requestUri =
+                        string.Format("http://maps.googleapis.com/maps/api/geocode/xml?address={0}&sensor=false",
+                            Uri.EscapeDataString(countyfullwithstate));
+
+                    var request = WebRequest.Create(requestUri);
+                    var response = request.GetResponse();
+                    var xdoc = XDocument.Load(response.GetResponseStream());
+
+                    if (xdoc.Element("GeocodeResponse").Element("status").ToString() == "ZERO_RESULTS")
+                    {
+                        return View("CountyNotFound");
+                    }
+
+                    if (!xdoc.ToString().ToLower().Contains(countyfull.ToLower()))
+                    {
+                        return View("CountyNotFound");
+                    }
                 }
-
-                if (!xdoc.ToString().ToLower().Contains(countyfull.ToLower()))
+                catch (SystemException er)
                 {
+                    ViewBag.Message = er.Message;
                     return View("CountyNotFound");
                 }
 

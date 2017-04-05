@@ -266,6 +266,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CivicViewModel.cs" />
     <Compile Include="Models\ContactViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -360,6 +361,7 @@
     <Content Include="Views\Home\Welcome.cshtml" />
     <Content Include="Views\Reports\InMyArea.cshtml" />
     <Content Include="Views\Account\Create100TestUsers.cshtml" />
+    <Content Include="Views\Reports\FindRepresentatives.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
