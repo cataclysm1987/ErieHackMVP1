@@ -5,13 +5,17 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net;
+using System.Net.Http;
 using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using System.Xml.Linq;
 using ErieHackMVP1.Models;
 using Microsoft.AspNet.Identity;
 using FluentScheduler;
+using Google.Apis.CivicInfo.v2;
+using Google.Apis.Services;
 using MvcPaging;
 using PagedList;
 
@@ -150,9 +154,7 @@ namespace ErieHackMVP1
             return View(report);
         }
 
-        // POST: Reports/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "ReportId,ReportName,ReportDescription,Source,Problem,ReportCounty,TimeSubmitted,TimeObserved")] Report report)
@@ -327,6 +329,31 @@ namespace ErieHackMVP1
         public ViewResult Wait()
         {
             return View();
+        }
+
+        [Authorize]
+        public async Task<ViewResult> FindRepresentatives()
+        {
+            var userid = User.Identity.GetUserId();
+            var currentuser = db.Users.FirstOrDefault(u => u.Id == userid);
+            string useraddress = currentuser.StreetAddress + "%20" + 
+                             currentuser.City + "%20" + 
+                             currentuser.State + "%20" +
+                             currentuser.ZipCode;
+            string fullrequest =
+                "https://www.googleapis.com/civicinfo/v2/representatives?key=AIzaSyCNMjfTidtyWY8zIHzoyH9czYrlwd5ssPI&address=" +
+                useraddress;
+            var uri = new Uri(fullrequest);
+            var client = new HttpClient();
+            var response = await client.GetAsync(uri);
+
+            string textResult = await response.Content.ReadAsStringAsync();
+            var view = new CivicViewModel();
+            view.JSResult = textResult;
+
+            
+
+            return View(view);
         }
 
         

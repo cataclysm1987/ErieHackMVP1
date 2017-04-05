@@ -260,8 +260,13 @@
     <Compile Include="Migrations\201704031331441_updatedbcontext.Designer.cs">
       <DependentUpon>201704031331441_updatedbcontext.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704051422517_fulladdress.cs" />
+    <Compile Include="Migrations\201704051422517_fulladdress.Designer.cs">
+      <DependentUpon>201704051422517_fulladdress.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CivicViewModel.cs" />
     <Compile Include="Models\ContactViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -356,6 +361,8 @@
     <Content Include="Views\Home\Welcome.cshtml" />
     <Content Include="Views\Reports\InMyArea.cshtml" />
     <Content Include="Views\Account\Create100TestUsers.cshtml" />
+    <Content Include="Views\Reports\FindRepresentatives.cshtml" />
+    <Content Include="Views\Home\TermsAndConditions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -383,6 +390,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704031331441_updatedbcontext.resx">
       <DependentUpon>201704031331441_updatedbcontext.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704051422517_fulladdress.resx">
+      <DependentUpon>201704051422517_fulladdress.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

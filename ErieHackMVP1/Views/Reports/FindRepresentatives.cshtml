@@ -1,0 +1,21 @@
+﻿@model ErieHackMVP1.Models.CivicViewModel
+
+@{
+    ViewBag.Title = "Find Representatives";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script>
+    var values = @Html.Raw(Json.Encode(Model.JSResult));
+    var valuesparsed = JSON.parse(values);
+    var keysbyindex = Object.keys(valuesparsed.officials);
+    console.log(JSON.stringify(keysbyindex));
+
+    var presidentname = valuesparsed.officials["name"];
+    console.log(presidentname);
+</script>
+
+<h2>@ViewBag.Title</h2>
+<br/>
+

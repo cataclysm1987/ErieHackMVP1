@@ -81,6 +81,23 @@ namespace ErieHackMVP1.Models
         public string ConfirmPassword { get; set; }
 
         [Required]
+        [Display(Name = "Street Address")]
+        public string StreetAddress { get; set; }
+
+        [Required]
+        [Display(Name = "City")]
+        public string City { get; set; }
+
+        [Required]
+        [Display(Name="State")]
+        public string State { get; set; }
+
+        [Required]
+        [DataType(DataType.PostalCode)]
+        [Display(Name = "Zip Code")]
+        public string ZipCode { get; set; }
+
+        [Required]
         [Display(Name = "County of Residence")]
         public string County { get; set; }
 
