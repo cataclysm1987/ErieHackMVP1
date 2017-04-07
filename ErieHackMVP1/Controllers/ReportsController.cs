@@ -34,6 +34,7 @@ namespace ErieHackMVP1
             public MyRegistry()
             {
                 Schedule<DailyAlert>().ToRunEvery(1).Days().At(12, 0);
+                //Schedule<DailyAlert>().ToRunEvery(2).Minutes();
             }
         }
 
@@ -264,6 +265,8 @@ namespace ErieHackMVP1
                     var fivepercentofcounty = db.Users.Count(u => u.County == county) / 20;
                     if (fivepercentofcounty < 5)
                         fivepercentofcounty = 5;
+                    //Temporary testing line. COMMENT OUT BELOW LINE WHEN LIVE
+                    //fivepercentofcounty = 1;
                     if (reports.Count(u => u.ReportCounty == county) >= fivepercentofcounty)
                     {
                         var countyreports = reports.Where(u => u.ReportCounty == county);
