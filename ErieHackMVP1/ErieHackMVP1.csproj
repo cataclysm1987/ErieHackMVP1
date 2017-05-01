@@ -363,6 +363,7 @@
     <Content Include="Views\Account\Create100TestUsers.cshtml" />
     <Content Include="Views\Reports\FindRepresentatives.cshtml" />
     <Content Include="Views\Home\TermsAndConditions.cshtml" />
+    <Content Include="Views\Home\Petition.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

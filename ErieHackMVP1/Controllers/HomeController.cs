@@ -40,6 +40,12 @@ namespace ErieHackMVP1.Controllers
             return View();
         }
 
+        public ViewResult Petition()
+        {
+            ViewBag.Title = "Petition";
+            return View();
+        }
+
 
         [HttpGet]
         public ActionResult Contact()
